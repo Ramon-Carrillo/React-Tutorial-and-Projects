@@ -20,7 +20,7 @@ const Navbar = () => {
     <nav>
       <div className='nav-center'>
         <div className='nav-header'>
-          <img src={logo} alt='logo' />
+          <img src={logo} alt='logo' className='logo' />
           <button
             className='nav-toggle'
             onClick={() => setShowLinks(!showLinks)}
