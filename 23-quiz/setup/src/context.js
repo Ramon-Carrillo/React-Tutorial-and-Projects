@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 
 const table = {
   sports: 21,
@@ -20,8 +20,13 @@ const AppProvider = ({ children }) => {
   const [questions, setQuestions] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [score, setScore] = useState(0)
-  const [error, setError] = useState({ status: false, message: '' })
-
+  const [error, setError] = useState(false)
+  const [quiz, setQuiz] = useState({
+    amount: 10,
+    category: 'sports',
+    difficulty: 'easy',
+    type: 'multiple',
+  })
   const [isModalOpen, setIsModalOpen] = useState(false)
 
   const fetchQuestions = async (url) => {
@@ -48,9 +53,47 @@ const AppProvider = ({ children }) => {
     }
   }
 
-  useEffect(() => {
-    fetchQuestions(tempUrl)
-  }, [])
+  const nextQuestion = () => {
+    setCurrentIndex((oldIndex) => {
+      const index = oldIndex + 1
+      if (index > questions.length - 1) {
+        openModal()
+        return 0
+      } else {
+        return index
+      }
+    })
+  }
+
+  const checkAnswer = (answer) => {
+    if (answer) {
+      setScore((oldState) => oldState + 1)
+    }
+    nextQuestion()
+  }
+
+  const openModal = () => {
+    setIsModalOpen(true)
+  }
+
+  const closeModal = () => {
+    setWaiting(true)
+    setScore(0)
+    setIsModalOpen(false)
+  }
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setQuiz({ ...quiz, [name]: value })
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    const { amount, category, difficulty } = quiz
+
+    const url = `${API_ENDPOINT}amount=${amount}&category=${table[category]}&difficulty=${difficulty}&type=multiple`
+    fetchQuestions(url)
+  }
 
   return (
     <AppContext.Provider
@@ -62,6 +105,12 @@ const AppProvider = ({ children }) => {
         score,
         error,
         isModalOpen,
+        nextQuestion,
+        checkAnswer,
+        closeModal,
+        quiz,
+        handleChange,
+        handleSubmit,
       }}
     >
       {children}
