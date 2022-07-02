@@ -22,7 +22,24 @@ const Card = () => {
           <h4>{name}</h4>
           <p>{twitter_username ? `@${twitter_username}` : `No Twitter Name`}</p>
         </div>
+        <a href={html_url}>Follow</a>
       </header>
+      <p className='bio'>{bio}</p>
+      <div className='links'>
+        <p>
+          <MdBusiness />
+          {company ? company : `No Company`}
+        </p>
+        <p>
+          <MdLocationOn />
+          {location ? location : 'No Location'}
+        </p>
+
+        <p>
+          <MdLink />
+          {blog ? `<a href="${blog}">${blog}</a>` : `No Blog`}
+        </p>
+      </div>
     </Wrapper>
   )
 }
