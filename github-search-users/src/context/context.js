@@ -13,8 +13,56 @@ const GithubProvider = ({ children }) => {
   const [githubUser, setGithubUser] = useState(mockUser)
   const [repos, setRepos] = useState(mockRepos)
   const [followers, setFollowers] = useState(mockFollowers)
+  const [loading, setLoading] = useState(false)
+  const [requests, setRequests] = useState(0)
+  const [error, setError] = useState({ show: false, msg: '' })
+
+  const searchUser = async (user) => {
+    setLoading(true)
+    toggleError({ show: false, msg: '' })
+    try {
+      const res = await axios.get(`${rootUrl}/users/${user}`)
+      setGithubUser(res.data)
+      setLoading(false)
+    } catch (err) {
+      toggleError(true, 'User not found')
+      setLoading(false)
+    }
+  }
+
+  const checkRequests = async () => {
+    try {
+      const res = await axios.get(`${rootUrl}/rate_limit`)
+      let data = await res.data.rate.remaining
+      setRequests(data)
+      if (data === 0) {
+        toggleError({ show: true, msg: 'You have reached your request limit' })
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const toggleError = (show = false, msg = '') => {
+    setError({ show, msg })
+  }
+
+  useEffect(() => {
+    checkRequests()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return (
-    <GithubContext.Provider value={{ githubUser, repos, followers }}>
+    <GithubContext.Provider
+      value={{
+        githubUser,
+        repos,
+        followers,
+        requests,
+        error,
+        searchUser,
+        loading,
+      }}
+    >
       {children}
     </GithubContext.Provider>
   )

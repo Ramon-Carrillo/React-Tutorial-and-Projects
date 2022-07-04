@@ -8,7 +8,7 @@ ReactFC.fcRoot(FusionCharts, Charts, FusionTheme)
 const Pie3D = ({ data }) => {
   const chartConfigs = {
     type: 'pie3d',
-    width: '400',
+    width: '100%',
     height: '400',
     dataFormat: 'json',
     dataSource: {
@@ -16,6 +16,7 @@ const Pie3D = ({ data }) => {
         caption: 'Languages',
         theme: 'fusion',
         decimals: '0',
+        pieRadius: '45%',
       },
       data,
     },

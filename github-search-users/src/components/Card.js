@@ -37,7 +37,7 @@ const Card = () => {
 
         <p>
           <MdLink />
-          {blog ? `<a href="${blog}">${blog}</a>` : `No Blog`}
+          {blog ? <a href={`${blog}`}>{`${blog}`}</a> : `No Blog`}
         </p>
       </div>
     </Wrapper>
