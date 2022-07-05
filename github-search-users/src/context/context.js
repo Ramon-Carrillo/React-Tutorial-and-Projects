@@ -23,7 +23,14 @@ const GithubProvider = ({ children }) => {
     try {
       const res = await axios.get(`${rootUrl}/users/${user}`)
       setGithubUser(res.data)
+      const { login, followers_url } = res.data
+      const resRepos = await axios(`${rootUrl}/users/${login}/repos?
+      per_page=100`)
+      const resFollowers = await axios(`${followers_url}?per_page=100`)
+      setRepos(resRepos.data)
+      setFollowers(resFollowers.data)
       setLoading(false)
+      checkRequests()
     } catch (err) {
       toggleError(true, 'User not found')
       setLoading(false)
