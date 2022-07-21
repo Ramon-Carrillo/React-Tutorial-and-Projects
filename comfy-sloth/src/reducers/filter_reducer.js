@@ -29,6 +29,34 @@ const filter_reducer = (state, action) => {
       grid_view: true,
     }
   }
+  if (action.type === UPDATE_SORT) {
+    return {
+      ...state,
+      sort: action.payload.value,
+    }
+  }
+  if (action.type === SORT_PRODUCTS) {
+    const { sort, filtered_products } = state
+    const sorted_products = filtered_products.sort((a, b) => {
+      if (sort === 'price-lowest') {
+        return a.price - b.price
+      }
+      if (sort === 'price-highest') {
+        return b.price - a.price
+      }
+      if (sort === 'name-a') {
+        return a.name.localeCompare(b.name)
+      }
+      if (sort === 'name-d') {
+        return b.name.localeCompare(a.name)
+      }
+      return 0
+    })
+    return {
+      ...state,
+      filtered_products: sorted_products,
+    }
+  }
   throw new Error(`No Matching "${action.type}" - action type`)
 }
 
